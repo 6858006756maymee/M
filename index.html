@@ -139,6 +139,23 @@
 <footer>
     © 2026 My Drive
 </footer>
+<script>
+function startQuiz() {
 
+const nickname = document.getElementById("nickname").value;
+
+if(nickname === ""){
+alert("Please enter a nickname");
+return;
+}
+
+document.getElementById("startSection").style.display = "none";
+document.getElementById("quizSection").style.display = "block";
+
+document.getElementById("nicknameDisplay").innerText =
+"Player: " + nickname;
+
+}
+</script>
 </body>
 </html>
