@@ -130,18 +130,31 @@
 </footer>
 
 <script>
-    function startQuiz() {
-        const nickname = document.getElementById("nickname").value.trim();
+    async function startQuiz() {
+    const nickname = document.getElementById("nickname").value.trim();
 
-        if (nickname === "") {
-            alert("Please enter your nickname.");
-            return;
-        }
-
-        document.getElementById("nicknameDisplay").innerText = nickname;
-        document.getElementById("quizSection").style.display = "block";
+    if (nickname === "") {
+        alert("Please enter your nickname.");
+        return;
     }
-</script>
 
-</body>
-</html>
+    try {
+        const response = await fetch("https://YOURSITE-service.onrender.com/api/quiz/start", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ nickname: nickname })
+        });
+
+        const data = await response.json();
+
+        document.getElementById("nicknameDisplay").innerText =
+            nickname + " — Starts: " + data.counter;
+
+        document.getElementById("quizSection").style.display = "block";
+
+    } catch (error) {
+        alert("Backend not deployed yet.");
+    }
+}
