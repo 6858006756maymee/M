@@ -140,7 +140,7 @@
     © 2026 My Drive
 </footer>
 <script>
-function startQuiz() {
+async function startQuiz() {
 
 const nickname = document.getElementById("nickname").value;
 
@@ -149,11 +149,27 @@ alert("Please enter a nickname");
 return;
 }
 
+try {
+
+const response = await fetch("https://THAICONSONANT-service.onrender.com/api/quiz/start", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({ nickname: nickname })
+});
+
+const data = await response.json();
+
 document.getElementById("startSection").style.display = "none";
 document.getElementById("quizSection").style.display = "block";
 
 document.getElementById("nicknameDisplay").innerText =
-"Player: " + nickname;
+nickname + " - Starts: " + data.counter;
+
+} catch (error) {
+alert("Backend not working yet");
+}
 
 }
 </script>
