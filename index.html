@@ -1,145 +1,348 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Thai Consonant Drill</title>
-<style>
-body{
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #f2f2f2;
-    padding: 30px;
-}
-#letter{
-    font-size: 120px;
-    margin: 40px;
-}
-button{
-    padding: 15px;
-    margin: 10px;
-    font-size: 18px;
-    width: 220px;
-    cursor: pointer;
-}
-#result{
-    font-size: 24px;
-    margin: 20px;
-    min-height: 30px;
-}
-#counter{
-    font-size: 22px;
-    margin-top: 20px;
-    color: #333;
-}
-#message{
-    font-size: 28px;
-    margin-top: 30px;
-    color: green;
-    font-weight: bold;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Thai Consonant Drill</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        #letter {
+            font-size: 120px;
+            margin: 40px;
+        }
+
+        button {
+            padding: 15px;
+            margin: 10px;
+            font-size: 18px;
+            width: 220px;
+            cursor: pointer;
+        }
+
+        #result {
+            font-size: 24px;
+            margin: 20px;
+            min-height: 30px;
+        }
+
+        #counter {
+            font-size: 22px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        #message {
+            font-size: 28px;
+            margin-top: 30px;
+            color: green;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #startSection input {
+            padding: 10px 12px;
+            width: 80%;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        #startSection button {
+            padding: 12px 24px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #hearts {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .heart {
+            transition: transform 0.3s ease;
+        }
+
+        .heart.lost {
+            filter: grayscale(100%) opacity(30%);
+            transform: scale(0.8);
+        }
+
+        #gameOverSection {
+            display: none;
+            padding: 40px;
+        }
+
+        #gameOverSection h2 {
+            color: #d93025;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .restart-btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #quizSection {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>Thai Consonant Drill</h1>
-<div id="counter"></div>
-<div id="letter"></div>
-<div id="choices"></div>
-<div id="result"></div>
-<div id="message"></div>
+    <div id="firstStep" class="container">
+        <div id="startSection">
+            <input type="text" id="nickname" placeholder="Enter your nickname">
+            <br>
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+    </div>
 
-<script>
-const consonants = [
-    {letter:"ก",name:"ko kai"},
-    {letter:"ข",name:"kho khai"},
-    {letter:"ค",name:"kho khwai"},
-    {letter:"ง",name:"ngo ngu"},
-    {letter:"จ",name:"cho chan"},
-    {letter:"ช",name:"cho chang"},
-    {letter:"ซ",name:"so so"},
-    {letter:"ญ",name:"yo ying"},
-    {letter:"ด",name:"do dek"},
-    {letter:"ต",name:"to tao"},
-    {letter:"ถ",name:"tho thung"},
-    {letter:"ท",name:"tho thahan"},
-    {letter:"น",name:"no nu"},
-    {letter:"บ",name:"bo baimai"},
-    {letter:"ป",name:"po pla"},
-    {letter:"ผ",name:"pho phueng"},
-    {letter:"พ",name:"pho phan"},
-    {letter:"ฟ",name:"fo fan"},
-    {letter:"ม",name:"mo ma"},
-    {letter:"ย",name:"yo yak"},
-    {letter:"ร",name:"ro rua"},
-    {letter:"ล",name:"lo ling"},
-    {letter:"ว",name:"wo waen"},
-    {letter:"ส",name:"so sua"},
-    {letter:"ห",name:"ho hip"},
-    {letter:"อ",name:"o ang"}
-];
+    <div id="secondStep">
+    
 
-let remainingConsonants = [...consonants];
-let current;
+        <div id="username" style="margin-top: 20px; font-weight: bold; color: #555;"></div>
 
-function updateCounter() {
-    document.getElementById("counter").innerHTML =
-        "Remaining consonants: " + remainingConsonants.length;
-}
+        <div class="container">
+            <div id="hearts"></div>
+            <h1>Thai Consonant Drill</h1>
 
-function newQuestion() {
-    document.getElementById("result").innerHTML = "";
-    document.getElementById("message").innerHTML = "";
-    updateCounter();
+            <div id="quizSection">
+                <div id="counter"></div>
+                <div id="letter"></div>
+                <div id="choices"></div>
+                <div id="result"></div>
+                <div id="message"></div>
+            </div>
 
-    if (remainingConsonants.length === 0) {
-        document.getElementById("letter").innerHTML = "🎉";
-        document.getElementById("choices").innerHTML = "";
-        document.getElementById("message").innerHTML = "You finished all consonants!";
-        return;
-    }
+            <div id="gameOverSection">
+                <h2>GAME OVER</h2>
+                <p>You ran out of hearts!</p>
+                <button class="restart-btn" onclick="playAgain()">Play Again</button>
+            </div>
+        </div>
 
-    current = remainingConsonants[Math.floor(Math.random() * remainingConsonants.length)];
-    document.getElementById("letter").innerHTML = current.letter;
+    </div>
 
-    let answers = [current.name];
+    <script>
+        const consonants = [
+            { letter: "ก", name: "ko kai" },
+            { letter: "ข", name: "kho khai" },
+            { letter: "ค", name: "kho khwai" },
+            { letter: "ง", name: "ngo ngu" },
+            { letter: "จ", name: "cho chan" },
+            { letter: "ช", name: "cho chang" },
+            { letter: "ซ", name: "so so" },
+            { letter: "ญ", name: "yo ying" },
+            { letter: "ด", name: "do dek" },
+            { letter: "ต", name: "to tao" },
+            { letter: "ถ", name: "tho thung" },
+            { letter: "ท", name: "tho thahan" },
+            { letter: "น", name: "no nu" },
+            { letter: "บ", name: "bo baimai" },
+            { letter: "ป", name: "po pla" },
+            { letter: "ผ", name: "pho phueng" },
+            { letter: "พ", name: "pho phan" },
+            { letter: "ฟ", name: "fo fan" },
+            { letter: "ม", name: "mo ma" },
+            { letter: "ย", name: "yo yak" },
+            { letter: "ร", name: "ro rua" },
+            { letter: "ล", name: "lo ling" },
+            { letter: "ว", name: "wo waen" },
+            { letter: "ส", name: "so sua" },
+            { letter: "ห", name: "ho hip" },
+            { letter: "อ", name: "o ang" }
+        ];
 
-    while (answers.length < 4) {
-        let rand = consonants[Math.floor(Math.random() * consonants.length)].name;
-        if (!answers.includes(rand)) {
-            answers.push(rand);
+        let lives = 3;
+        let remainingConsonants = [...consonants];
+        let current;
+        let savedNickname = localStorage.getItem("nickname");
+
+        function init() {
+            if (savedNickname) {
+                document.getElementById("username").innerHTML = "Welcome, " + savedNickname;
+                document.getElementById("firstStep").style.display = "none";
+                document.getElementById("secondStep").style.display = "block";
+                
+                // Load saved progress
+                const savedLives = localStorage.getItem("lives");
+                const savedProgress = localStorage.getItem("remainingConsonants");
+                
+                if (savedLives !== null) lives = parseInt(savedLives);
+                if (savedProgress !== null) remainingConsonants = JSON.parse(savedProgress);
+                
+                if (lives <= 0) {
+                    showGameOver();
+                } else {
+                    newQuestion();
+                }
+            } else {
+                document.getElementById("firstStep").style.display = "block";
+                document.getElementById("secondStep").style.display = "none";
+            }
         }
-    }
 
-    answers.sort(() => Math.random() - 0.5);
+        function startQuiz() {
+            const nicknameInput = document.getElementById("nickname").value;
+            if (nicknameInput.trim() === "") {
+                alert("Please enter your nickname");
+                return;
+            }
+            savedNickname = nicknameInput;
+            localStorage.setItem("nickname", savedNickname);
+            localStorage.setItem("lives", "3");
+            localStorage.setItem("remainingConsonants", JSON.stringify([...consonants]));
+            
+            lives = 3;
+            remainingConsonants = [...consonants];
+            
+            document.getElementById("username").innerHTML = "Welcome, " + savedNickname;
+            document.getElementById("firstStep").style.display = "none";
+            document.getElementById("secondStep").style.display = "block";
+            document.getElementById("quizSection").style.display = "block";
+            document.getElementById("gameOverSection").style.display = "none";
 
-    let html = "";
-    answers.forEach(a => {
-        html += `<button onclick="checkAnswer('${a}')">${a}</button><br>`;
-    });
+            newQuestion();
+        }
 
-    document.getElementById("choices").innerHTML = html;
-}
+        function updateHearts() {
+            let html = "";
+            for (let i = 0; i < 3; i++) {
+                if (i < lives) {
+                    html += '<span class="heart">❤️</span>';
+                } else {
+                    html += '<span class="heart lost">❤️</span>';
+                }
+            }
+            document.getElementById("hearts").innerHTML = html;
+        }
 
-function checkAnswer(answer) {
-    if (answer === current.name) {
-        document.getElementById("result").innerHTML = "✅ Correct!";
+        function updateCounter() {
+            document.getElementById("counter").innerHTML =
+                "Remaining consonants: " + remainingConsonants.length;
+        }
 
-        remainingConsonants = remainingConsonants.filter(c => c.letter !== current.letter);
+        function newQuestion() {
+            updateHearts();
+            updateCounter();
+            document.getElementById("result").innerHTML = "";
+            document.getElementById("message").innerHTML = "";
 
-        setTimeout(newQuestion, 1000);
-    } else {
-        document.getElementById("result").innerHTML =
-            "❌ Wrong! Correct answer: " + current.name;
+            if (remainingConsonants.length === 0) {
+                document.getElementById("letter").innerHTML = "🎉";
+                document.getElementById("choices").innerHTML = "";
+                document.getElementById("message").innerHTML = "You finished all consonants!";
+                return;
+            }
 
-        setTimeout(newQuestion, 1500);
-    }
+            current = remainingConsonants[Math.floor(Math.random() * remainingConsonants.length)];
+            document.getElementById("letter").innerHTML = current.letter;
 
-    updateCounter();
-}
+            let answers = [current.name];
+            while (answers.length < 4) {
+                let rand = consonants[Math.floor(Math.random() * consonants.length)].name;
+                if (!answers.includes(rand)) {
+                    answers.push(rand);
+                }
+            }
 
-newQuestion();
-</script>
+            answers.sort(() => Math.random() - 0.5);
+
+            let html = "";
+            answers.forEach(a => {
+                html += `<button onclick="checkAnswer('${a}')">${a}</button><br>`;
+            });
+
+            document.getElementById("choices").innerHTML = html;
+        }
+
+        function checkAnswer(answer) {
+            if (answer === current.name) {
+                document.getElementById("result").innerHTML = "✅ Correct!";
+                remainingConsonants = remainingConsonants.filter(c => c.letter !== current.letter);
+                localStorage.setItem("remainingConsonants", JSON.stringify(remainingConsonants));
+                
+                if (remainingConsonants.length === 0) {
+                    setTimeout(newQuestion, 1000);
+                } else {
+                    setTimeout(newQuestion, 1000);
+                }
+            } else {
+                lives--;
+                localStorage.setItem("lives", lives.toString());
+                updateHearts();
+                
+                document.getElementById("result").innerHTML =
+                    "❌ Wrong! Correct answer: " + current.name;
+
+                if (lives <= 0) {
+                    setTimeout(showGameOver, 1000);
+                } else {
+                    setTimeout(newQuestion, 1500);
+                }
+            }
+            updateCounter();
+        }
+
+        function showGameOver() {
+            document.getElementById("quizSection").style.display = "none";
+            document.getElementById("gameOverSection").style.display = "block";
+            updateHearts();
+        }
+
+        function playAgain() {
+            localStorage.removeItem("nickname");
+            localStorage.removeItem("lives");
+            localStorage.removeItem("remainingConsonants");
+            
+            // Reset local variables
+            lives = 3;
+            remainingConsonants = [...consonants];
+            savedNickname = null;
+            document.getElementById("nickname").value = "";
+            
+            // Reset UI
+            document.getElementById("firstStep").style.display = "block";
+            document.getElementById("secondStep").style.display = "none";
+            document.getElementById("quizSection").style.display = "block";
+            document.getElementById("gameOverSection").style.display = "none";
+            document.getElementById("result").innerHTML = "";
+            document.getElementById("message").innerHTML = "";
+        }
+
+        // Initialize the game
+        init();
+    </script>
 
 </body>
+
 </html>
