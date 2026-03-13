@@ -264,7 +264,7 @@
             if (remainingConsonants.length === 0) {
                 document.getElementById("letter").innerHTML = "🎉";
                 document.getElementById("choices").innerHTML = "";
-                document.getElementById("message").innerHTML = "You finished all consonants!";
+                document.getElementById("message").innerHTML = `You finished all consonants! <br/><br/> <button class="restart-btn" onclick="playAgain()">Play Again</button>`;
                 return;
             }
 
