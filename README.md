@@ -18,3 +18,7 @@ git commit -m "[Commit Message]"
 ```sh
 git push -u origin main
 ```
+6. Open URL via 
+```sh
+https://6858006756maymee.github.io/M/index.html
+```
