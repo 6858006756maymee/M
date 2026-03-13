@@ -5,23 +5,37 @@
 <title>Thai Consonant Drill</title>
 <style>
 body{
-    font-family: Arial;
-    text-align:center;
-    background:#f2f2f2;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f2f2f2;
+    padding: 30px;
 }
 #letter{
-    font-size:120px;
-    margin:40px;
+    font-size: 120px;
+    margin: 40px;
 }
 button{
-    padding:15px;
-    margin:10px;
-    font-size:18px;
-    width:200px;
+    padding: 15px;
+    margin: 10px;
+    font-size: 18px;
+    width: 220px;
+    cursor: pointer;
 }
 #result{
-    font-size:24px;
-    margin:20px;
+    font-size: 24px;
+    margin: 20px;
+    min-height: 30px;
+}
+#counter{
+    font-size: 22px;
+    margin-top: 20px;
+    color: #333;
+}
+#message{
+    font-size: 28px;
+    margin-top: 30px;
+    color: green;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -29,88 +43,102 @@ button{
 <body>
 
 <h1>Thai Consonant Drill</h1>
+<div id="counter"></div>
 <div id="letter"></div>
-
 <div id="choices"></div>
-
 <div id="result"></div>
+<div id="message"></div>
 
 <script>
-
 const consonants = [
-{letter:"ก",name:"ko kai"},
-{letter:"ข",name:"kho khai"},
-{letter:"ค",name:"kho khwai"},
-{letter:"ง",name:"ngo ngu"},
-{letter:"จ",name:"cho chan"},
-{letter:"ช",name:"cho chang"},
-{letter:"ซ",name:"so so"},
-{letter:"ญ",name:"yo ying"},
-{letter:"ด",name:"do dek"},
-{letter:"ต",name:"to tao"},
-{letter:"ถ",name:"tho thung"},
-{letter:"ท",name:"tho thahan"},
-{letter:"น",name:"no nu"},
-{letter:"บ",name:"bo baimai"},
-{letter:"ป",name:"po pla"},
-{letter:"ผ",name:"pho phueng"},
-{letter:"พ",name:"pho phan"},
-{letter:"ฟ",name:"fo fan"},
-{letter:"ม",name:"mo ma"},
-{letter:"ย",name:"yo yak"},
-{letter:"ร",name:"ro rua"},
-{letter:"ล",name:"lo ling"},
-{letter:"ว",name:"wo waen"},
-{letter:"ส",name:"so sua"},
-{letter:"ห",name:"ho hip"},
-{letter:"อ",name:"o ang"}
+    {letter:"ก",name:"ko kai"},
+    {letter:"ข",name:"kho khai"},
+    {letter:"ค",name:"kho khwai"},
+    {letter:"ง",name:"ngo ngu"},
+    {letter:"จ",name:"cho chan"},
+    {letter:"ช",name:"cho chang"},
+    {letter:"ซ",name:"so so"},
+    {letter:"ญ",name:"yo ying"},
+    {letter:"ด",name:"do dek"},
+    {letter:"ต",name:"to tao"},
+    {letter:"ถ",name:"tho thung"},
+    {letter:"ท",name:"tho thahan"},
+    {letter:"น",name:"no nu"},
+    {letter:"บ",name:"bo baimai"},
+    {letter:"ป",name:"po pla"},
+    {letter:"ผ",name:"pho phueng"},
+    {letter:"พ",name:"pho phan"},
+    {letter:"ฟ",name:"fo fan"},
+    {letter:"ม",name:"mo ma"},
+    {letter:"ย",name:"yo yak"},
+    {letter:"ร",name:"ro rua"},
+    {letter:"ล",name:"lo ling"},
+    {letter:"ว",name:"wo waen"},
+    {letter:"ส",name:"so sua"},
+    {letter:"ห",name:"ho hip"},
+    {letter:"อ",name:"o ang"}
 ];
 
+let remainingConsonants = [...consonants];
 let current;
 
-function newQuestion(){
+function updateCounter() {
+    document.getElementById("counter").innerHTML =
+        "Remaining consonants: " + remainingConsonants.length;
+}
 
-document.getElementById("result").innerHTML="";
+function newQuestion() {
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("message").innerHTML = "";
+    updateCounter();
 
-current = consonants[Math.floor(Math.random()*consonants.length)];
-
-document.getElementById("letter").innerHTML = current.letter;
-
-let answers = [current.name];
-
-while(answers.length < 4){
-    let rand = consonants[Math.floor(Math.random()*consonants.length)].name;
-    if(!answers.includes(rand)){
-        answers.push(rand);
+    if (remainingConsonants.length === 0) {
+        document.getElementById("letter").innerHTML = "🎉";
+        document.getElementById("choices").innerHTML = "";
+        document.getElementById("message").innerHTML = "You finished all consonants!";
+        return;
     }
+
+    current = remainingConsonants[Math.floor(Math.random() * remainingConsonants.length)];
+    document.getElementById("letter").innerHTML = current.letter;
+
+    let answers = [current.name];
+
+    while (answers.length < 4) {
+        let rand = consonants[Math.floor(Math.random() * consonants.length)].name;
+        if (!answers.includes(rand)) {
+            answers.push(rand);
+        }
+    }
+
+    answers.sort(() => Math.random() - 0.5);
+
+    let html = "";
+    answers.forEach(a => {
+        html += `<button onclick="checkAnswer('${a}')">${a}</button><br>`;
+    });
+
+    document.getElementById("choices").innerHTML = html;
 }
 
-answers.sort(()=>Math.random()-0.5);
+function checkAnswer(answer) {
+    if (answer === current.name) {
+        document.getElementById("result").innerHTML = "✅ Correct!";
 
-let html="";
-answers.forEach(a=>{
-    html += `<button onclick="checkAnswer('${a}')">${a}</button><br>`;
-});
+        remainingConsonants = remainingConsonants.filter(c => c.letter !== current.letter);
 
-document.getElementById("choices").innerHTML = html;
+        setTimeout(newQuestion, 1000);
+    } else {
+        document.getElementById("result").innerHTML =
+            "❌ Wrong! Correct answer: " + current.name;
 
-}
+        setTimeout(newQuestion, 1500);
+    }
 
-function checkAnswer(answer){
-
-if(answer === current.name){
-    document.getElementById("result").innerHTML = "✅ Correct!";
-}
-else{
-    document.getElementById("result").innerHTML = "❌ Wrong! Correct answer: " + current.name;
-}
-
-setTimeout(newQuestion,1500);
-
+    updateCounter();
 }
 
 newQuestion();
-
 </script>
 
 </body>
