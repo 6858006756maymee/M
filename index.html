@@ -1,177 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>My Drive</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f1f3f4;
-        }
-
-        /* Header */
-        header {
-            background-color: #ffffff;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 20px;
-            color: #202124;
-        }
-
-        .search-box input {
-            padding: 8px 12px;
-            width: 250px;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-        }
-
-        /* Main Container */
-        .container {
-            padding: 20px;
-        }
-
-        /* File Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #e8eaed;
-        }
-
-        tr {
-            border-bottom: 1px solid #ddd;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .file-icon {
-            margin-right: 8px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Thai Consonant Drill</title>
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background:#f2f2f2;
+}
+#letter{
+    font-size:120px;
+    margin:40px;
+}
+button{
+    padding:15px;
+    margin:10px;
+    font-size:18px;
+    width:200px;
+}
+#result{
+    font-size:24px;
+    margin:20px;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-    <h1>My Drive</h1>
-    <div class="search-box">
-        <input type="text" placeholder="Search in Drive">
-    </div>
-</header>
+<h1>Thai Consonant Drill</h1>
+<div id="letter"></div>
 
-<div class="container">
-    <div id="startSection">
-    <input type="text" id="nickname" placeholder="Enter your nickname">
-    <br><br>
-    <button onclick="startQuiz()">Start Quiz</button>
-</div>
+<div id="choices"></div>
 
-<div id="quizSection" style="display:none;">
-    <h3 id="nicknameDisplay"></h3>
-</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Owner</th>
-                <th>Last Modified</th>
-                <th>File Size</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>📄 Report.docx</td>
-                <td>You</td>
-                <td>Feb 18, 2026</td>
-                <td>120 KB</td>
-            </tr>
-            <tr>
-                <td>📊 Sales.xlsx</td>
-                <td>You</td>
-                <td>Feb 15, 2026</td>
-                <td>540 KB</td>
-            </tr>
-            <tr>
-                <td>📁 Project Folder</td>
-                <td>You</td>
-                <td>Feb 10, 2026</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>📷 Image.png</td>
-                <td>You</td>
-                <td>Feb 05, 2026</td>
-                <td>2.1 MB</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div id="result"></div>
 
-<footer>
-    © 2026 My Drive
-</footer>
 <script>
-async function startQuiz() {
 
-const nickname = document.getElementById("nickname").value;
+const consonants = [
+{letter:"ก",name:"ko kai"},
+{letter:"ข",name:"kho khai"},
+{letter:"ค",name:"kho khwai"},
+{letter:"ง",name:"ngo ngu"},
+{letter:"จ",name:"cho chan"},
+{letter:"ช",name:"cho chang"},
+{letter:"ซ",name:"so so"},
+{letter:"ญ",name:"yo ying"},
+{letter:"ด",name:"do dek"},
+{letter:"ต",name:"to tao"},
+{letter:"ถ",name:"tho thung"},
+{letter:"ท",name:"tho thahan"},
+{letter:"น",name:"no nu"},
+{letter:"บ",name:"bo baimai"},
+{letter:"ป",name:"po pla"},
+{letter:"ผ",name:"pho phueng"},
+{letter:"พ",name:"pho phan"},
+{letter:"ฟ",name:"fo fan"},
+{letter:"ม",name:"mo ma"},
+{letter:"ย",name:"yo yak"},
+{letter:"ร",name:"ro rua"},
+{letter:"ล",name:"lo ling"},
+{letter:"ว",name:"wo waen"},
+{letter:"ส",name:"so sua"},
+{letter:"ห",name:"ho hip"},
+{letter:"อ",name:"o ang"}
+];
 
-if(nickname === ""){
-alert("Please enter a nickname");
-return;
+let current;
 
+function newQuestion(){
 
-try {
+document.getElementById("result").innerHTML="";
 
-const response = await fetch("https://THAICONSONANT-service.onrender.com/api/quiz/start", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({ nickname: nickname })
+current = consonants[Math.floor(Math.random()*consonants.length)];
+
+document.getElementById("letter").innerHTML = current.letter;
+
+let answers = [current.name];
+
+while(answers.length < 4){
+    let rand = consonants[Math.floor(Math.random()*consonants.length)].name;
+    if(!answers.includes(rand)){
+        answers.push(rand);
+    }
+}
+
+answers.sort(()=>Math.random()-0.5);
+
+let html="";
+answers.forEach(a=>{
+    html += `<button onclick="checkAnswer('${a}')">${a}</button><br>`;
 });
 
-const data = await response.json();
-
-document.getElementById("startSection").style.display = "none";
-document.getElementById("quizSection").style.display = "block";
-
-document.getElementById("nicknameDisplay").innerText =
-nickname + " - Starts: " + data.counter;
-
-} catch (error) {
-alert("Backend not working yet");
-}
+document.getElementById("choices").innerHTML = html;
 
 }
+
+function checkAnswer(answer){
+
+if(answer === current.name){
+    document.getElementById("result").innerHTML = "✅ Correct!";
+}
+else{
+    document.getElementById("result").innerHTML = "❌ Wrong! Correct answer: " + current.name;
+}
+
+setTimeout(newQuestion,1500);
+
+}
+
+newQuestion();
+
 </script>
+
 </body>
 </html>
